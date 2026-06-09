@@ -28,6 +28,9 @@ async def lifespan(app: FastAPI):
 
 def create_defaults():
     """Create default roles and admin user."""
+    import logging
+    logger = logging.getLogger(__name__)
+    
     from app.core.security import security
     
     db = SessionLocal()
@@ -36,6 +39,7 @@ def create_defaults():
         from app.models.user import Role
         
         if db.query(Role).count() == 0:
+            logger.info("Creating default roles...")
             # Create default roles
             roles = [
                 Role(name="Admin", description="Full system access", permissions="all"),
@@ -47,6 +51,7 @@ def create_defaults():
             db.commit()
             
             # Create admin user
+            logger.info("Creating default admin user...")
             from app.models.user import User
             admin = User(
                 email="admin@passwordmanager.local",
@@ -58,6 +63,12 @@ def create_defaults():
             )
             db.add(admin)
             db.commit()
+            logger.info("Default admin user created successfully")
+        else:
+            logger.info("Default roles already exist, skipping creation")
+    except Exception as e:
+        logger.error(f"Error creating defaults: {e}")
+        raise
     finally:
         db.close()
 
