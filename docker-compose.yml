@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: vault_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vault_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+      POSTGRES_DB: vault
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vault_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vault_user -d vault"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vault_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://vault_user:${DB_PASSWORD:-changeme123}@db:5432/vault
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-change-me-in-production}
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      REFRESH_TOKEN_EXPIRE_DAYS: 7
+      CORS_ORIGINS: '["http://localhost","http://localhost:3000"]'
+      DEBUG: "false"
+    volumes:
+      - ./backend/app:/app/app
+      - backups_data:/backups
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - vault_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vault_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: /api/v1
+    depends_on:
+      - backend
+    networks:
+      - vault_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: vault_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - static_files:/var/www/html:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - vault_network
+
+networks:
+  vault_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  backups_data:
+  static_files:
