@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import {
   LayoutDashboard,
@@ -9,7 +9,6 @@ import {
   Shield,
   Activity,
   Settings,
-  ChevronRight,
 } from 'lucide-react';
 import clsx from 'clsx';
 

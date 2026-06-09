@@ -11,14 +11,12 @@ import {
   EyeOff,
   Star,
   StarOff,
-  Edit,
   Trash2,
   ArrowLeft,
   Link as LinkIcon,
-  MoreVertical,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import type { Vault, Credential, CredentialCreate, CredentialDetail } from '@/types';
+import type { Vault, Credential } from '@/types';
 
 export function VaultDetailPage() {
   const { vaultId } = useParams<{ vaultId: string }>();
@@ -28,8 +26,6 @@ export function VaultDetailPage() {
   const [search, setSearch] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [visiblePasswords, setVisiblePasswords] = useState<Record<number, string>>({});
-  const [copiedId, setCopiedId] = useState<number | null>(null);
-
   // Form state
   const [newCredName, setNewCredName] = useState('');
   const [newCredUrl, setNewCredUrl] = useState('');
@@ -70,12 +66,10 @@ export function VaultDetailPage() {
     }
   };
 
-  const handleCopy = async (text: string, id: number) => {
+  const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopiedId(id);
       toast.success('Copied to clipboard');
-      setTimeout(() => setCopiedId(null), 2000);
     } catch (error) {
       toast.error('Failed to copy');
     }
@@ -246,7 +240,7 @@ export function VaultDetailPage() {
                   <div className="flex items-center space-x-2">
                     {cred.username && (
                       <button
-                        onClick={() => handleCopy(cred.username!, cred.id)}
+                        onClick={() => handleCopy(cred.username!)}
                         className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                         title="Copy username"
                       >
@@ -266,7 +260,7 @@ export function VaultDetailPage() {
                     </button>
                     {visiblePasswords[cred.id] && (
                       <button
-                        onClick={() => handleCopy(visiblePasswords[cred.id], cred.id)}
+                        onClick={() => handleCopy(visiblePasswords[cred.id])}
                         className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                         title="Copy password"
                       >
