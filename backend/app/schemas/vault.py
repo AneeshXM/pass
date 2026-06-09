@@ -54,6 +54,29 @@ class VaultListResponse(BaseModel):
     page_size: int
 
 
+class TagBase(BaseModel):
+    """Base tag schema."""
+
+    name: str = Field(..., max_length=100)
+    color: Optional[str] = None
+
+
+class TagCreate(TagBase):
+    """Schema for creating a tag."""
+
+    vault_id: Optional[int] = None
+
+
+class TagResponse(TagBase):
+    """Schema for tag response."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    vault_id: Optional[int] = None
+    created_at: datetime
+
+
 class CredentialBase(BaseModel):
     """Base credential schema."""
 
