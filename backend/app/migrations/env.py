@@ -8,6 +8,7 @@ from alembic import context
 
 import sys
 from pathlib import Path
+import os
 
 # Add the app to the path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
@@ -23,8 +24,9 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Set the database URL from settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Get database URL from environment or settings
+database_url = os.environ.get("DATABASE_URL") or settings.DATABASE_URL
+config.set_main_option("sqlalchemy.url", database_url)
 
 # Add your model's MetaData object here for 'autogenerate' support
 target_metadata = Base.metadata
