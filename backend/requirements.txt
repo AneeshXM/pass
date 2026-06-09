@@ -1,0 +1,39 @@
+# FastAPI and server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+gunicorn==21.2.0
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+psycopg2-binary==2.9.9
+
+# Authentication
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# Security
+bcrypt==4.1.2
+cryptography==42.0.0
+
+# Validation
+pydantic==2.5.3
+pydantic-settings==2.1.0
+email-validator==2.1.0
+
+# Utilities
+python-dotenv==1.0.0
+pyotp==2.9.0
+qrcode==7.4.2
+pillow==10.2.0
+httpx==0.26.0
+
+# Logging
+structlog==24.1.0
+
+# Testing
+pytest==8.0.0
+pytest-asyncio==0.23.4
+pytest-cov==4.1.0
+httpx==0.26.0
