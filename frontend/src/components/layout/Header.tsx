@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { Menu, X, Sun, Moon, LogOut, User, Settings } from 'lucide-react';
-import clsx from 'clsx';
 
 interface HeaderProps {
   onMenuToggle: () => void;

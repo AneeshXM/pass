@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { vaultsApi } from '@/services/api';
 import { Card, CardBody, Button, Input, Modal, Spinner } from '@/components/ui';
-import { Plus, Search, Folder, Lock, Share2, MoreVertical, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Folder, Share2, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import type { Vault, VaultCreate } from '@/types';
+import type { Vault } from '@/types';
 
 export function VaultsPage() {
   const [vaults, setVaults] = useState<Vault[]>([]);

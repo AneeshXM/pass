@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { auditApi } from '@/services/api';
 import { Card, CardHeader, CardBody, Spinner } from '@/components/ui';
@@ -11,7 +11,6 @@ import {
   Star,
   AlertTriangle,
   Plus,
-  ArrowRight,
 } from 'lucide-react';
 import type { DashboardStats } from '@/types';
 
