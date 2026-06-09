@@ -39,7 +39,6 @@ const adminItems: NavItem[] = [
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user } = useAuth();
-  const location = useLocation();
 
   const isAdmin = user?.is_superuser || user?.role_id === 1;
 
